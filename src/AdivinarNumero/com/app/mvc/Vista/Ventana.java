@@ -17,14 +17,15 @@ import javax.swing.*;
  * @author capis
  */
 public class Ventana extends JFrame {
-
-    private DefaultListModel<String> modeloLista;
-    private int[] arregloNumeros;
-    private int[] numerosFaltantes;
-    private int numeroFaltante;
-    private int cantidadAsignada;
-    private int indice = -1;
-    private int cantidadFaltante = 0;
+    // Variables 
+    private DefaultListModel<String> modeloLista; // Es un modelo de datos para el JList
+    private int[] arregloNumeros; // Para almacenar los números del usuario de forma secuencial 1, 2, ..., 10
+    private int[] numerosFaltantes; // Para guardar números faltantes
+    private int numeroFaltante; // Para guardar solo un número
+    private int cantidadAsignada; // Para el tamaño del arreglo de números
+    private int indice = -1; // Un indice de valor para agregar valores al array
+    private int cantidadFaltante = 0; // Indicador de cuantos números faltantes hay en el arreglo
+    // Uso de variables por referencia (objeto) a las clases Controlador y EncontrarNumeros
     Controlador control;
     EncontrarNumeros numeros;
 
@@ -33,6 +34,7 @@ public class Ventana extends JFrame {
      */
     public Ventana() {
         initComponents();
+        // Estableciendo un titulo, acción después de cerrarse, posición y aplicando un diseño de tabla al panel de datos
         this.setResizable(false);
         this.setTitle("Adivina el faltante o faltantes");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -228,13 +230,14 @@ public class Ventana extends JFrame {
     }//GEN-LAST:event_btnEncontrarNumeroActionPerformed
 
     private void btnAgregarDatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDatoActionPerformed
-        indice++;
-        if (cantidadAsignada != 0 && !txtAsignarElemento.getText().isEmpty()) {
+        indice++; // Incremento para añadir el número a la posición correspondiente del arreglo
+        if (cantidadAsignada != 0 && !txtAsignarElemento.getText().isEmpty()) { // Evitar desborde de arreglo y que el valor del campo de texto contenga algo
             if (indice < cantidadAsignada) {
                 int valor = control.setElement(txtAsignarElemento.getText());
                 if (valor == 0) {
-                    cantidadFaltante++;
+                    cantidadFaltante++; // Contar la cantidad de faltantes
                 }
+                // Creación de un Label para mostrar el dato en el panel de datos
                 JLabel label = new JLabel();
                 label.setForeground(Color.red);
                 label.setText(String.valueOf(valor));
@@ -242,7 +245,7 @@ public class Ventana extends JFrame {
                 arregloNumeros[indice] = valor;
                 // Actualizar el Panel que contien los datos
                 panelDatos.revalidate();
-                panelDatos.repaint();
+                panelDatos.repaint(); // Forzar cambio
             } else {
                 JOptionPane.showMessageDialog(this, "No se pueden ingresar más elementos", "Arreglo lleno", JOptionPane.WARNING_MESSAGE);
             }
@@ -254,17 +257,18 @@ public class Ventana extends JFrame {
     }//GEN-LAST:event_btnAgregarDatoActionPerformed
 
     private void btnEncontrarNumerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEncontrarNumerosActionPerformed
-        if (cantidadFaltante > 1) {
-            numeros = new EncontrarNumeros();
-            numerosFaltantes = numeros.encontrarNumeros(arregloNumeros, cantidadAsignada);
+        if (cantidadFaltante > 1) { // Validar si es más de un número faltante
+            numeros = new EncontrarNumeros(); // Instanciar el objeto de EncontrarNumeros
+            numerosFaltantes = numeros.encontrarNumeros(arregloNumeros, cantidadAsignada); // Se usa el método encontrarNumeros pasando el arreglo y el tamaño asignado
             System.out.println(Arrays.toString(numerosFaltantes));
-            showNumbers();
+            showNumbers(); // Uso del método para mostrar los datos en el JList
         }
-        //JOptionPane.showMessageDialog(this, "No hay números faltantes o solo hay uno", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(this, "No hay números faltantes o solo hay uno", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnEncontrarNumerosActionPerformed
 
     private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
-        newGame();
+        newGame(); // LLamada al método para reiniciar todos los valores de los componentes, excepto el del JList
     }//GEN-LAST:event_btnReiniciarActionPerformed
 
     /**
@@ -339,6 +343,7 @@ public class Ventana extends JFrame {
     }
 
     public void cleanCamposTexto() {
+        // Vaciando los campos de texto
         txtAsignarElemento.setText(null);
         txtTamañoArreglo.setText(null);
     }
@@ -346,13 +351,8 @@ public class Ventana extends JFrame {
     public void newGame() {
         // Limpiar el JPanel
         panelDatos.removeAll();
-        panelDatos.revalidate();
-        panelDatos.repaint();
-
-        // Limpiar el modelo del JList
-        
-        //modeloLista.clear();
-
+        panelDatos.revalidate(); // Validar el cambio aplicado
+        panelDatos.repaint(); // Forzar actualización al estado
         // Reiniciar variables
         arregloNumeros = null;
         numerosFaltantes = null;
